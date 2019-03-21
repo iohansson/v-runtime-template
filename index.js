@@ -37,7 +37,9 @@ export default {
       Object.keys($data).forEach(e => {if(typeof this.$data[e]==='undefined') passthrough.$data[e] = $data[e];} );
       Object.keys($props).forEach(e => {if(typeof this.$props[e]==='undefined') passthrough.$props[e] = $props[e];} );
       Object.keys($options).forEach((optionName) => {
+        console.log('processing option', optionName);
         const option = $options[optionName];
+        console.log('option value', option);
         if (typeof passthrough[optionName] === 'undefined') passthrough[optionName] = {};
         if (!optionKeys.includes(optionName)) optionKeys.push(optionName);
         Object.keys(option).forEach((e) => {

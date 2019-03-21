@@ -1,5 +1,5 @@
 /**
- * v-runtime-template v1.6.2
+ * v-runtime-template v1.6.3
  * (c) 2019 Alex J <alexjovermorales@gmail.com>
  * @license MIT
  */
@@ -53,7 +53,9 @@ var index = {
       Object.keys($data).forEach(function (e) {if(typeof this$1.$data[e]==='undefined') { passthrough.$data[e] = $data[e]; }} );
       Object.keys($props).forEach(function (e) {if(typeof this$1.$props[e]==='undefined') { passthrough.$props[e] = $props[e]; }} );
       Object.keys($options).forEach(function (optionName) {
+        console.log('processing option', optionName);
         var option = $options[optionName];
+        console.log('option value', option);
         if (typeof passthrough[optionName] === 'undefined') { passthrough[optionName] = {}; }
         if (!optionKeys.includes(optionName)) { optionKeys.push(optionName); }
         Object.keys(option).forEach(function (e) {
