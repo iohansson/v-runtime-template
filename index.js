@@ -29,16 +29,23 @@ export default {
   render(h) {
     if (this.template) {
       const { $data = {}, $props = {}, $options = {} } = this.$parent;
-      const { components = {}, computed = {}, methods = {} } = $options;
 
-      let passthrough = {$data:{}, $props:{}, $options:{}, components:{}, computed:{}, methods:{}};
+      let passthrough = {$data:{}, $props:{}, components:{}, computed:{}, methods:{}};
+      const optionKeys = [];
 
       //build new objects by removing keys if already exists (e.g. created by mixins)
-      Object.keys($data).forEach(e => {if(typeof this.$data[e]==="undefined") passthrough.$data[e] = $data[e];} );
-      Object.keys($props).forEach(e => {if(typeof this.$props[e]==="undefined") passthrough.$props[e] = $props[e];} );
-      Object.keys(methods).forEach(e => {if(typeof this.$options.methods[e]==="undefined") passthrough.methods[e] = methods[e];} );
-      Object.keys(computed).forEach(e => {if(typeof this.$options.computed[e]==="undefined") passthrough.computed[e] = computed[e];} );
-      Object.keys(components).forEach(e => {if(typeof this.$options.components[e]==="undefined") passthrough.components[e] = components[e];} );
+      Object.keys($data).forEach(e => {if(typeof this.$data[e]==='undefined') passthrough.$data[e] = $data[e];} );
+      Object.keys($props).forEach(e => {if(typeof this.$props[e]==='undefined') passthrough.$props[e] = $props[e];} );
+      Object.keys($options).forEach((optionName) => {
+        const option = $options[optionName];
+        if (typeof passthrough[optionName] === 'undefined') passthrough[optionName] = {};
+        if (!optionKeys.includes(optionName)) optionKeys.push(optionName);
+        Object.keys(option).forEach((e) => {
+          if (typeof this.$options[optionName] === 'undefined' || typeof this.$options[optionName][e] === 'undefined') {
+            passthrough[optionName][e] = option[e];
+          }
+        });
+      });
 
       const methodKeys = Object.keys(passthrough.methods || {});
       const dataKeys = Object.keys(passthrough.$data || {});
@@ -50,9 +57,9 @@ export default {
       const dynamic = {
         template: this.template || "<div></div>",
         props: allKeys,
-        computed: passthrough.computed,
-        components: passthrough.components
       };
+
+      optionKeys.forEach(key => dynamic[key] = passthrough[key]);
 
       return h(dynamic, {
         props
